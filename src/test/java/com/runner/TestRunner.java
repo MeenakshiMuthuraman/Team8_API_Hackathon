@@ -20,7 +20,6 @@ import io.cucumber.testng.CucumberOptions;
 					
 			},
 			glue= {"com.stepdefinitions"})
-		//	glue= "stepdefinitions") 
 
 
 	public class TestRunner extends AbstractTestNGCucumberTests {
