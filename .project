@@ -31,4 +31,16 @@
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>org.eclipse.m2e.core.maven2Nature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>src/test/resources/data/data.xlsx</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/OneDrive/Desktop/Numpy%20ninja/Dietian%20postman%20&amp;%20rest%20assure%20hackthon/data.xlsx</locationURI>
+		</link>
+		<link>
+			<name>src/test/resources/data/writerid.xlsx</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/OneDrive/Desktop/Numpy%20ninja/Dietian%20postman%20&amp;%20rest%20assure%20hackthon/writerid.xlsx</locationURI>
+		</link>
+	</linkedResources>
 </projectDescription>
