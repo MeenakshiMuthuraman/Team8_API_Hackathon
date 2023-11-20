@@ -33,7 +33,6 @@ public class userlogin {
     private JSONObject request = new JSONObject();
    
     public static Response response;
-    //public static String token;
     public static String authToken;
 
     @Given("the user makes a login request with correct {string} and {string}")
@@ -49,8 +48,8 @@ public class userlogin {
     }
     @Then("the API should respond with a status code OK")
     public void the_api_should_respond_with_a_status_code_ok() {
-
     	assertEquals(200,response.statusCode());
+    	response.prettyPrint();
 
     }
     @And("the response should contain an authentication token")

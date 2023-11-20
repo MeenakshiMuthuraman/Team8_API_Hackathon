@@ -21,10 +21,11 @@ import static org.junit.Assert.assertNotNull;
 
 import java.io.FileReader;
 import java.io.IOException;
+import com.utilities.Loggerload;
 
 public class morbidity {
 	DieticianOperation DTO = new DieticianOperation();
-    private JSONObject request = new JSONObject();
+//    private JSONObject request = new JSONObject();
     Response response;
 
 	
@@ -33,20 +34,26 @@ public class morbidity {
 		String token = DTO.getToken();
 		
     	response = DTO.GetAllMorbidity(token);
-//            }
-//        catch (IOException e) {
-//            e.printStackTrace();
-//        }
-	}
 
-	
+	}
 
 	@Then("the response should contain all morbidity details")
 	public void the_response_should_contain_all_morbidity_details() {
         String message = response.prettyPrint();
+        Loggerload.info(message);
 
 	}
 
-
-
+	@When("the user request to get morbidity condition by valid {string}")
+	public void the_user_request_to_get_morbidity_condition_by_valid(String testname) {
+		String token = DTO.getToken();
+	    DTO.GetMorbidityByTestName(token, testname);
+	}
+	
+	@Then("the response should contain morbidity details of requested {string}")
+	public void the_response_should_contain_morbidity_details_of_requested_test_name(String testname) {
+		String token = DTO.getToken();
+	    response = DTO.GetMorbidityByTestName(token, testname);
+	    response.prettyPrint();
+	}
 }
