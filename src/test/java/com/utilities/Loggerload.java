@@ -3,6 +3,7 @@ package com.utilities;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+
 public class Loggerload {
 
 		private static Logger logger = LogManager.getLogger();
