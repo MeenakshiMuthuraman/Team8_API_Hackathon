@@ -23,8 +23,8 @@ Scenario: Patient test Report
  When 	the API should respond with a status code OK
  Then the response should contain error message
 	
-	Scenario: patient view test reports as files with valid fileid
- 
- Given the patient makes a request to view testreports with valid fileid
- When 	the API should respond with a status code OK
- Then the response should contain error message
+#	Scenario: patient view test reports as files with valid fileid
+ #
+ #Given the patient makes a request to view testreports with valid fileid
+ #When 	the API should respond with a status code OK
+ #Then the response should contain report

@@ -27,6 +27,7 @@ public class morbidity {
 	DieticianOperation DTO = new DieticianOperation();
 //    private JSONObject request = new JSONObject();
     Response response;
+    org.apache.log4j.Logger log = Loggerload.getLogger(Loggerload.class);
 
 	
 	@When("the user requests to get all morbidity details with bearer token")
@@ -40,7 +41,7 @@ public class morbidity {
 	@Then("the response should contain all morbidity details")
 	public void the_response_should_contain_all_morbidity_details() {
         String message = response.prettyPrint();
-        Loggerload.info(message);
+        log.info(message);
 
 	}
 

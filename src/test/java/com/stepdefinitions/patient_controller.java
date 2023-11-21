@@ -28,6 +28,7 @@ public class patient_controller {
 	
     DieticianOperation DTO = new DieticianOperation();
     public static Response response;
+    org.apache.log4j.Logger log = Loggerload.getLogger(Loggerload.class);
 
 	
 	@When("the user requests to create patient record with valid credential")
@@ -41,7 +42,7 @@ public class patient_controller {
 		assertEquals(201,response.statusCode());
     	int patientId = response.jsonPath().getInt("patientId");
     	System.out.println("***************PatientID************:"+patientId);
-    	Loggerload.info("*******************Patient Created*****************");
+    	log.info("*******************Patient Created*****************");
     	DTO.SetPatientId(patientId);
     	response.prettyPrint();
 	}
@@ -53,7 +54,7 @@ public class patient_controller {
 	@When("the user request to get all patient details")
 	public void the_user_request_to_get_all_patient_details() {
 		String token=DTO.getToken();
-    	Loggerload.info("*******************Getting All Patients*****************");
+    	log.info("*******************Getting All Patients*****************");
     	response = DTO.GetAllPatient(token);
 	}
 	

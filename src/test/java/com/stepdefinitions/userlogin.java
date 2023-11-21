@@ -3,7 +3,6 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.And;
-import com.utilities.Loggerload;
 import io.restassured.response.Response;
 import io.restassured.response.ResponseOptions;
 
@@ -25,6 +24,8 @@ import java.util.Map;
 import com.opencsv.CSVWriter;
 import com.utilities.*;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 public class userlogin {
@@ -34,17 +35,12 @@ public class userlogin {
    
     public static Response response;
     public static String authToken;
-
+    org.apache.log4j.Logger log = Loggerload.getLogger(Loggerload.class);
     @Given("the user makes a login request with correct {string} and {string}")
     public void the_user_makes_a_login_request_with_correct_and(String username, String password) {
     	DTO.ValidLogin(username, password);
 
     }
-//    @Given("the patient makes a login request with correct {string} and {string}")
-//    public void the_patient_makes_a_login_request_with_correct_and(String username, String password) {
-//    	DTO.PatientLogin(username, password);
-//
-//    }
     @When("user performs post operation for login")
     public void user_performs_post_operation_for_login() {
     	
@@ -54,8 +50,7 @@ public class userlogin {
     @Then("the API should respond with a status code OK")
     public void the_api_should_respond_with_a_status_code_ok() {
     	assertEquals(200,response.statusCode());
-    	Loggerload.info(response.prettyPrint());
-    	System.out.println(response.statusCode());
+    	log.info(response.prettyPrint());
     	response.prettyPrint();
 
     }
@@ -86,9 +81,12 @@ public class userlogin {
 
     @Then("the response should contain logged out successfully")
     public void the_response_should_contain_logged_out_successfully() {
-    	Loggerload.info("============Dietician Logged Out successfully==============");
+    	log.info("============Dietician Logged Out successfully==============");
         String message = response.prettyPrint();
     }
-    
+    @Given("the user makes a login request with credentials from JSON file {string}")
+    public void the_user_makes_a_login_request_with_credentials_from_json_file(String filePath) {
+        DTO.CredentialJsonReader(filePath);
+    }
 
 }

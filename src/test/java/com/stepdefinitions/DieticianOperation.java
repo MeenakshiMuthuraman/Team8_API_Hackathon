@@ -1,15 +1,33 @@
 package com.stepdefinitions;
 
 
+import io.cucumber.core.internal.com.fasterxml.jackson.databind.JsonNode;
+import io.cucumber.java.it.Date;
 import io.restassured.response.Response;
+import jdk.internal.org.jline.utils.Log;
 
 import static io.restassured.RestAssured.baseURI;
 import static io.restassured.RestAssured.given;
 
+import java.util.Iterator;
+import java.util.Map;
+
 import org.json.simple.JSONObject;
 import com.utilities.RestAssuredExtension;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.utilities.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 //import api.endpoints.Routes;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 
 public class DieticianOperation {
@@ -64,10 +82,11 @@ public class DieticianOperation {
 	{
 		request.put("password", password);
 		request.put("userLoginEmail", username);
-		System.out.println(request.toJSONString());
+//		System.out.println(request.toJSONString());
 	}
 	public static Response PerformLogin()
 	{
+		System.out.println(request.toJSONString());
 		baseURI="https://dietician-dev-41d9a344a720.herokuapp.com/dietician";
 		response = given()
 			    .baseUri(baseURI)
@@ -101,6 +120,57 @@ public class DieticianOperation {
 				.get("/morbidity");
 		return response;
 	}
+	public static Response ReadPatientDetails(String token)
+	{
+		baseURI = "https://dietician-dev-41d9a344a720.herokuapp.com/dietician";
+		try {
+		    String patientInfoPath = ".//src/test/resources/TestData/patientdetails.json";
+
+		    String jsonData = new String(Files.readAllBytes(Paths.get(patientInfoPath)));
+
+		    ObjectMapper objectMapper = new ObjectMapper();
+		    com.fasterxml.jackson.databind.JsonNode jsonNode = objectMapper.readTree(jsonData);
+
+		    String firstName = jsonNode.get("FirstName").asText();
+		    String lastName = jsonNode.get("LastName").asText();
+		    String contactNumber = jsonNode.get("ContactNumber").asText();
+		    String email = jsonNode.get("Email").asText();
+		    String allergy = jsonNode.get("Allergy").asText();
+		    String foodCategory = jsonNode.get("FoodCategory").asText();
+
+		    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+		    OffsetDateTime dateOfBirth = OffsetDateTime.parse(jsonNode.get("DateOfBirth").asText(), formatter);
+
+		    JSONObject patientInfo = new JSONObject();
+		        patientInfo.put("FirstName", firstName);
+		        patientInfo.put("LastName", lastName);
+		        patientInfo.put("ContactNumber", contactNumber);
+		        patientInfo.put("Email", email);
+		        patientInfo.put("Allergy", allergy);
+		        patientInfo.put("FoodCategory", foodCategory);
+		        patientInfo.put("DateOfBirth", formatter.format(dateOfBirth));
+
+		   
+		    String filepath = System.getProperty("user.dir") + "src/test/resources/TestData/Hypo Thyroid-Report.pdf.pdf";
+		    response = given()
+		            .baseUri(baseURI)
+		            .header("Authorization", "Bearer " + token)
+		            .multiPart("patientInfo", patientInfo.toString(), "application/json")
+		            .multiPart("file", filepath)
+		            .post("/patient");
+
+
+		} catch (Exception e) {
+		    e.printStackTrace();
+		}
+		finally {
+		    System.out.println("########################Response of patient details###########");
+		    if (response != null) {
+		        response.prettyPrint();
+		    }
+		}
+		return response;
+	}
 	public static Response GetMorbidityByTestName(String token,String testname)
 	{
 		baseURI="https://dietician-dev-41d9a344a720.herokuapp.com/dietician";
@@ -114,26 +184,10 @@ public class DieticianOperation {
 	}
 	public static Response CreatePatient(String token)
 	{
-		baseURI = "https://dietician-dev-41d9a344a720.herokuapp.com/dietician";
-		JSONObject patientInfo = new JSONObject()
-				{{	
-			put("FirstName", "Ruhi");
-            put("LastName", "Sam");
-            put("ContactNumber", "6843557851");
-            put("Email", "Ruhi@Sam.com");
-            put("Allergy", "Hazelnut");
-            put("FoodCategory", "Jain");
-            put("DateOfBirth", "1989-08-25");
-				}};
-				String filepath = System.getProperty("user.dir")+"src/test/resources/TestData/Hypo Thyroid-Report.pdf.pdf";
-				Response response = given()
-		                .baseUri(baseURI)
-		                .header("Authorization", "Bearer " + token).when()
-		                .multiPart("patientInfo", patientInfo.toString(), "application/json")
-		                .multiPart("file", filepath)  
-		                .post("/patient");
-				System.out.println("Response Message:"+response+"payload:"+patientInfo);
-				return response;
+		System.out.println(token);
+		response = ReadPatientDetails(token);
+		return response;
+				
 		}		
 	
 	public static Response GetAllPatient(String token)
@@ -205,5 +259,37 @@ public class DieticianOperation {
 				.when()
 				.get("/patient/testReports/viewFile/{fileId}");
 		return response;
+	}
+	
+	public void CredentialJsonReader(String filePath) {
+		
+		try {
+            
+            String jsonData = new String(Files.readAllBytes(Paths.get(filePath)));
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            com.fasterxml.jackson.databind.JsonNode jsonNode = objectMapper.readTree(jsonData);
+
+//            String password = jsonNode.get("password").asText();
+//            String userLoginEmail = jsonNode.get("userLoginEmail").asText();
+//            ValidLogin(userLoginEmail,password);
+//            System.out.println("Password: " + password);
+//            System.out.println("User Login Email: " + userLoginEmail);
+            com.fasterxml.jackson.databind.JsonNode loginArray = jsonNode.get("login");
+
+            com.fasterxml.jackson.databind.JsonNode loginData = loginArray.get(0);
+
+            String password = loginData.get("password").asText();
+            String userLoginEmail = loginData.get("userLoginEmail").asText();
+
+            ValidLogin(userLoginEmail,password);
+                    System.out.println("Password: " + password);
+                    System.out.println("User Login Email: " + userLoginEmail);
+                    System.out.println("---"); 
+                
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 	}
 }
