@@ -15,7 +15,7 @@ import io.cucumber.testng.AbstractTestNGCucumberTests;
 					"src/test/resources/features/01userlogin.feature",
 					"src/test/resources/features/02morbidity_controller.feature",
 					"src/test/resources/features/03patient_Controller.feature",
-//					"src/test/resources/features/04patient_testreports.feature",
+					"src/test/resources/features/04patient_testreports.feature",
 					
 			},
 			glue= {"com.stepdefinitions"})

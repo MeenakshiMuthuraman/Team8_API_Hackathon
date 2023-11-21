@@ -13,5 +13,5 @@ And the response should contain an authentication token
 #When  User performs logout
 #Then the API should respond with a status code OK
 #And the response should contain logged out successfully
-
+#
 

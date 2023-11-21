@@ -3,12 +3,14 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.And;
-
+import com.utilities.Loggerload;
 import io.restassured.response.Response;
 import io.restassured.response.ResponseOptions;
 
 import static io.restassured.RestAssured.given;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 
 
@@ -26,9 +28,7 @@ import com.utilities.*;
 
 
 public class userlogin {
-	
-//	private String baseUrl = "https://dietician-dev-41d9a344a720.herokuapp.com/dietician";
-	
+
     DieticianOperation DTO = new DieticianOperation();
     private JSONObject request = new JSONObject();
    
@@ -40,6 +40,11 @@ public class userlogin {
     	DTO.ValidLogin(username, password);
 
     }
+//    @Given("the patient makes a login request with correct {string} and {string}")
+//    public void the_patient_makes_a_login_request_with_correct_and(String username, String password) {
+//    	DTO.PatientLogin(username, password);
+//
+//    }
     @When("user performs post operation for login")
     public void user_performs_post_operation_for_login() {
     	
@@ -49,6 +54,8 @@ public class userlogin {
     @Then("the API should respond with a status code OK")
     public void the_api_should_respond_with_a_status_code_ok() {
     	assertEquals(200,response.statusCode());
+    	Loggerload.info(response.prettyPrint());
+    	System.out.println(response.statusCode());
     	response.prettyPrint();
 
     }
@@ -79,6 +86,7 @@ public class userlogin {
 
     @Then("the response should contain logged out successfully")
     public void the_response_should_contain_logged_out_successfully() {
+    	Loggerload.info("============Dietician Logged Out successfully==============");
         String message = response.prettyPrint();
     }
     
