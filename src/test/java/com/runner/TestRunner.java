@@ -6,7 +6,7 @@ import io.cucumber.testng.AbstractTestNGCucumberTests;
 
 @io.cucumber.testng.CucumberOptions(
 			plugin = {"pretty", "html:target/DieticianAPI_HtmlReport.html",
-					"json:target/cucumber-reports/CucumberTestReport.json",
+                "json:target/cucumber-reports/CucumberTestReport.json",
 					"io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm",
 					"com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:"
 					}, 
