@@ -1,3 +1,4 @@
+
 Feature: Patient Controller
 
 Scenario: Get All Patient Details

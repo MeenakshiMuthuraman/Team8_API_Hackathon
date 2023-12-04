@@ -1,4 +1,5 @@
 package com.stepdefinitions;
+
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
@@ -23,6 +24,7 @@ import java.util.Map;
 
 import com.opencsv.CSVWriter;
 import com.utilities.*;
+
 
 public class patient_controller {
 	
@@ -77,8 +79,16 @@ public class patient_controller {
 		response.prettyPrint();
 	}
 
+
 	@Then("the responde should contain successful message")
 	public void the_responde_should_contain_successful_message() {
 		response.prettyPrint();
 	}
 }
+
+@Then("user will receive {int} created with response for user module")
+public void user_will_receive_created_with_response_for_user_module(Integer int1) {
+    
+}
+}
+
