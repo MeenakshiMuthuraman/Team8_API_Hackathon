@@ -1,27 +1,31 @@
-@tag
-Feature: patient login
-  I want to use this template for my feature file
 
-  @tag1 @plogin
-  Scenario Outline: create a patientlogin
-    Given The POST endpoint and the reqeust payload from "<Sheetname>" and <RowNumber> for login
-    When I send a POST reqeust for creating an token
-    Then The program is successfully created 200
+Feature: Patient test report 
+ 
+ Scenario: Logout User
+When  User performs logout
+Then the API should respond with a status code OK
+And the response should contain logged out successfully
 
-    Examples: 
-      | Sheetname | RowNumber |
-      | Sheet1    |         0|
-      | Sheet1    |         1 |
+Scenario: Patient Login
+  Given the user makes a login request with correct "Merlinl@lee.com" and "test"
+	When user performs post operation for login
+	Then the API should respond with a status code OK
+	And the response should contain an authentication token
 
-  @tag2 @testreport
-  Scenario: testreport for patients Morbility Details
-    Given patient creates GET request for dietience portal
-    When I send the GET request with the MorbilityID
-    Then the status could be 200
-
-  @tag3 @ViewFile
-  Scenario: patient need to view the file with patient login
-    Given: Patient creates a GET request with file id for dietieance portal
-    When: patient send the GET request with the fileID
-    Then: status returns to be 200
-
+Scenario: Patient test Report
+ 
+ Given the patient makes a request to view testreports
+ When the API should respond with a status code OK
+ Then the response should contain test reports
+ 
+ Scenario: patient view test reports as files with invalid fileid
+ 
+ Given the patient makes a request to view testreports with file
+ When 	the API should respond with a status code OK
+ Then the response should contain error message
+	
+#	Scenario: patient view test reports as files with valid fileid
+ #
+ #Given the patient makes a request to view testreports with valid fileid
+ #When 	the API should respond with a status code OK
+ #Then the response should contain report

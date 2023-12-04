@@ -1,102 +1,89 @@
 package com.stepdefinitions;
-import io.cucumber.core.logging.Logger;
-import io.cucumber.java.en.*;
-import com.utilities.*;
-import static io.restassured.RestAssured.*;
 
-import io.restassured.http.ContentType;
-import io.restassured.module.jsv.JsonSchemaValidator;
-import io.restassured.path.json.JsonPath;
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.When;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.And;
+
 import io.restassured.response.Response;
-import io.restassured.response.ValidatableResponse;
-import io.restassured.specification.RequestSpecification;
-import com.utilities.ConfigReader;
-import com.utilities.Excelreader;
+import io.restassured.response.ResponseOptions;
 
-import org.testng.Assert;
-import static io.restassured.matcher.RestAssuredMatchers.*;
-import static org.hamcrest.Matchers.*;
-import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
-import static org.hamcrest.CoreMatchers.equalTo;
+import static io.restassured.RestAssured.baseURI;
+import static io.restassured.RestAssured.given;
 
-import java.io.IOException;
-import java.util.LinkedHashMap;
-import java.util.Random;
-
-import org.hamcrest.Matchers;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+
+import com.opencsv.CSVWriter;
+import com.utilities.*;
+
+
 public class patient_controller {
+	
+    DieticianOperation DTO = new DieticianOperation();
+    public static Response response;
+    org.apache.log4j.Logger log = Loggerload.getLogger(Loggerload.class);
 
 	
+	@When("the user requests to create patient record with valid credential")
+	public void the_user_requests_to_create_patient_record_with_valid_credential() {
+		String token=DTO.getToken();
+	    response = DTO.CreatePatient(token);
+	}
 
-	/*
-	@Given("user creates post request from  {string} and {int}")
-	
-		
+	@Then("the API should respond with a status code created")
+	public void the_api_should_respond_with_a_status_code_created() {
+		assertEquals(201,response.statusCode());
+    	int patientId = response.jsonPath().getInt("patientId");
+    	System.out.println("***************PatientID************:"+patientId);
+    	log.info("*******************Patient Created*****************");
+    	DTO.SetPatientId(patientId);
+    	response.prettyPrint();
+	}
 
-@When("the user makes a login request with correct username and password")
-public void the_user_makes_a_login_request_with_correct_username_and_password() {
+	@Then("the response should contain successful message")
+	public void the_response_should_contain_successful_creation() {
+		response.prettyPrint();
+	}
+	@When("the user request to get all patient details")
+	public void the_user_request_to_get_all_patient_details() {
+		String token=DTO.getToken();
+    	log.info("*******************Getting All Patients*****************");
+    	response = DTO.GetAllPatient(token);
+	}
 	
+	@When("the user request to delete patient with valid patient id")
+	public void the_user_request_to_delete_patient_with_valid_patient_id() {
+		String token = DTO.getToken();
+		int patientid = DTO.getPatientId();
+		response =DTO.DeletePatient(token,patientid);
+	}	
+	@When("the user requests to update patient record with valid credential")
+	public void the_user_requests_to_update_patient_record_with_valid_credential() {
+		String token=DTO.getToken();
+		int patientid=DTO.getPatientId();
+	    response = DTO.UpdatePatient(token,patientid);
+	}
 
-@Then("the API should respond with a status code OK")
-public void the_api_should_respond_with_a_status_code_ok() {
-    // Write code here that turns the phrase above into concrete actions
-    throw new io.cucumber.java.PendingException();
-}
-*/
-	
-	
-	
-@Given("user creates post request from  {string} and <RowNumber>")
-public void user_creates_post_request_from_and(String string, Integer int1) throws IOException {
+	@Then("the API shhould respond with a status code updated")
+	public void the_api_shhould_respond_with_a_status_code_updated() {
+		assertEquals(200,response.statusCode());
+		response.prettyPrint();
+	}
 
-	request1=given().
-			header("Content-Type","application/Json").
-			contentType(ContentType.JSON).
-			accept(ContentType.JSON);
-	Excelreader reader = new Excelreader();	
-	testdata = reader.readexcelsheet(excelpath,string,int1);
-	rowval=int1;
-	
-	//save role id and role status in another array
-	String FirstName = testdata.get("FirstName");
-	String LastName = testdata.get("Last Name");
-String ContactNumber = testdata.get("ContactNumber");
-String Email = testdata.get("Email");
-String Allergy = testdata.get("Allergy");
-String FoodCategory = testdata.get("FoodCategory");
-String DateOfBirth = testdata.get("DateOfBirth");
 
-	JSONArray userRoleMapsArray = new JSONArray();
-	JSONObject userRoleMap = new JSONObject();
-	userRoleMap.put("FirstName", FirstName);
-	userRoleMap.put("Last Name", Last Name);
-	userRoleMap.put("ContactNumber", ContactNumber);
-	userRoleMap.put("Email", Email);
-	userRoleMap.put("Allergy", Allergy);
-	userRoleMap.put("FoodCategory", FoodCategory);
-	userRoleMap.put("DateOfBirth", DateOfBirth);
-	
-	
-	userRoleMapsArray.add(userRoleMap);
-	
-	
-	//System.out.println("userrolearray "+userRoleMapsArray);
-	//userRoleMapsArray.put(userRoleMap);
-
-	requestbody.put("userRoleMaps",userRoleMapsArray);
-	System.out.println(requestbody.toJSONString());
-
-}
-
-@When("user send post request with valid requestbody and valid endpoint")
-public void user_send_post_request_with_valid_requestbody_and_valid_endpoint() {
-	response = request1.when().body(requestbody.toJSONString()).
-			post(baseURL+config.getpatient_uri());
-			//then().
-			//statusCode(201).log().all().extract().response();
+	@Then("the responde should contain successful message")
+	public void the_responde_should_contain_successful_message() {
+		response.prettyPrint();
+	}
 }
 
 @Then("user will receive {int} created with response for user module")
