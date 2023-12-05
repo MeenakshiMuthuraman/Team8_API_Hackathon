@@ -1,5 +1,4 @@
 package com.stepdefinitions;
-
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
@@ -25,7 +24,6 @@ import java.util.Map;
 import com.opencsv.CSVWriter;
 import com.utilities.*;
 
-
 public class patient_controller {
 	
     DieticianOperation DTO = new DieticianOperation();
@@ -47,11 +45,13 @@ public class patient_controller {
     	log.info("*******************Patient Created*****************");
     	DTO.SetPatientId(patientId);
     	response.prettyPrint();
+    	log.info(response.prettyPrint());
 	}
 
 	@Then("the response should contain successful message")
 	public void the_response_should_contain_successful_creation() {
 		response.prettyPrint();
+		log.info(response.prettyPrint());
 	}
 	@When("the user request to get all patient details")
 	public void the_user_request_to_get_all_patient_details() {
@@ -65,7 +65,13 @@ public class patient_controller {
 		String token = DTO.getToken();
 		int patientid = DTO.getPatientId();
 		response =DTO.DeletePatient(token,patientid);
-	}	
+	}
+	@When("the user request to delete patient with invalid patient id")
+	public void the_user_request_to_delete_patient_with_invalid_patient_id() {
+		String token = DTO.getToken();
+		int patientid = 391;
+		response =DTO.DeletePatient(token,patientid);
+	}
 	@When("the user requests to update patient record with valid credential")
 	public void the_user_requests_to_update_patient_record_with_valid_credential() {
 		String token=DTO.getToken();
@@ -76,19 +82,21 @@ public class patient_controller {
 	@Then("the API shhould respond with a status code updated")
 	public void the_api_shhould_respond_with_a_status_code_updated() {
 		assertEquals(200,response.statusCode());
+	}
+	
+	@Then("the API should respond with a status code ok")
+	public void the_api_shhould_respond_with_a_status_code_not_found() {
+		assertEquals(404,response.statusCode());
 		response.prettyPrint();
 	}
-
-
 	@Then("the responde should contain successful message")
 	public void the_responde_should_contain_successful_message() {
 		response.prettyPrint();
 	}
+	
+	@Then("the response should contain error message patientid not found")
+	public void the_responde_should_contain_error_message_not_found() {
+		response.prettyPrint();
+		log.info(response.prettyPrint());
+	}
 }
-
-@Then("user will receive {int} created with response for user module")
-public void user_will_receive_created_with_response_for_user_module(Integer int1) {
-    
-}
-}
-
